@@ -277,7 +277,7 @@ class Generator {
     return bytes;
   }
 
-  List<int> setStyles(PosStyles styles, {bool isKanji = false}) {
+  List<int> setStyles(PosStyles styles, {bool? isKanji}) {
     List<int> bytes = [];
     if (styles.align != _styles.align) {
       bytes += codec.encode(styles.align == PosAlign.left
@@ -326,9 +326,9 @@ class Generator {
     }
 
     // Set Kanji mode
-    if (isKanji) {
+    if (isKanji != null && isKanji) {
       bytes += cKanjiOn.codeUnits;
-    } else {
+    } else if (isKanji != null && !isKanji) {
       bytes += cKanjiOff.codeUnits;
     }
 
@@ -352,9 +352,10 @@ class Generator {
   }
 
   /// Send raw command(s)
-  List<int> rawBytes(List<int> cmd, {bool isKanji = false}) {
+  List<int> rawBytes(List<int> cmd, {bool? isKanji}) {
     List<int> bytes = [];
-    if (!isKanji) {
+    //disable kanji off mode (some printers don't support it)
+    if (isKanji != null && !isKanji) {
       bytes += cKanjiOff.codeUnits;
     }
     bytes += Uint8List.fromList(cmd);
@@ -365,13 +366,13 @@ class Generator {
     String text, {
     PosStyles styles = const PosStyles(),
     int linesAfter = 0,
-    bool containsChinese = false,
+    bool? containsChinese,
     int? maxCharsPerLine,
   }) {
     List<int> bytes = [];
-    if (!containsChinese) {
+    if (containsChinese == null || !containsChinese) {
       bytes += _text(
-        _encode(text, isKanji: containsChinese),
+        _encode(text, isKanji: containsChinese ?? false),
         styles: styles,
         isKanji: containsChinese,
         maxCharsPerLine: maxCharsPerLine,
@@ -813,7 +814,7 @@ class Generator {
     Uint8List textBytes, {
     PosStyles styles = const PosStyles(),
     int? colInd = 0,
-    bool isKanji = false,
+    bool? isKanji,
     int colWidth = 12,
     int? maxCharsPerLine,
   }) {
