@@ -59,3 +59,6 @@ const cCashDrawerPin5 = '${esc}p130';
 // QR Code
 const cQrHeader = '$gs(k';
 const cControlHeader = '$gs(K';
+
+// Print density (darkness) - GS ( K, Function 49: pL pH = 02 00, cn = 0x31, m = level 0-255
+// 0 = default, 1-6 typically darker (printer-dependent)

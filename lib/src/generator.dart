@@ -771,6 +771,16 @@ class Generator {
     return bytes;
   }
 
+  /// Set print density (darkness).
+  /// GS ( K - Select print density (Function 49).
+  /// [level] 0 = default, 1-6 typically darker (printer-dependent). Clamped to 0-255.
+  List<int> setPrintDensity(int level) {
+    List<int> bytes = [];
+    final m = level.clamp(0, 255);
+    bytes += cControlHeader.codeUnits + [0x02, 0x00, 0x31, m];
+    return bytes;
+  }
+
   /// Open cash drawer
   List<int> drawer({PosDrawer pin = PosDrawer.pin2}) {
     List<int> bytes = [];
